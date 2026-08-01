@@ -181,7 +181,7 @@ python scripts/build_collection_plan.py snapshot.json zotero.sqlite plan.json "�
 
 ## 授權與免責
 
-<!-- TODO 發佈前補上 LICENSE（建議 MIT，需填著作權人姓名） -->
+MIT License — 詳見 [LICENSE](LICENSE)。作者：Ching-Wei Ye（葉淨維）。
 
 使用前請自行備份 EndNote library 與 Zotero 資料目錄。
 腳本雖然對 EndNote 是唯讀、對 Zotero 只做新增與可還原操作，但**資料遷移一律先備份**。
