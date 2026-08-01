@@ -130,7 +130,7 @@ Zotero 匯入 EndNote XML 時，**書目與 PDF 會過去，但分組（Groups�
 
 repo 內建 agent 指示，**AI 會照本手冊的九步驟帶你走**，每一關數字不對就停下來。
 
-> ⚠️ **需要付費的 Claude 訂閱（Pro/Max）或 API 計費，約 US$20/月。**
+> ⚠️ **需要付費的 Claude or Codex 訂閱（Pro/Max）或 API 計費，約 US$20/月。**
 > **沒有也完全沒關係**——手冊的每一步都設計成可以自己走完，AI 只是加速，不是必要條件。
 > 尤其**路徑 B 完全不需要 AI，也不需要 Python**。
 
