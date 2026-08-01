@@ -10,14 +10,14 @@
 |---|---|---|
 | **手上有正在寫的 Word 論文稿** | 📄 **[Word 舊稿必讀](docs/01_Word舊稿必讀.md)** ← **最急，先看這個** | [PDF](pdf/01_Word舊稿必讀.pdf) |
 | 要搬文獻庫 | 📘 **[遷移手冊](docs/02_遷移手冊.md)** | [PDF](pdf/02_遷移手冊.pdf) |
-| 只想要一張紙照著勾 | — | ⭐ **[一頁快查 PDF](pdf/00_一頁快查.pdf)**（剛好 1 頁，印出來貼螢幕旁） |
+| 只想要一張紙照著勾 | ⭐ [一頁快查](docs/00_一頁快查.md) | ⭐ **[PDF](pdf/00_一頁快查.pdf)**（剛好 1 頁，印出來貼螢幕旁） |
 | 只想拿腳本 | 見下方「腳本」 | — |
 
 > **手冊完全不需要程式基礎**——裡面有純 GUI 的「路徑 B」，只要會用滑鼠就能走完。
 > 腳本（路徑 A）是給分組很多、想省時間的人用的加速器，不是必要條件。
 
 > 📌 **Markdown 是正本，PDF 是轉出來的。**
-> 內容有更新一律改 `docs/*.md`，再跑 `python tools/build_pdf.py` 重新產生 PDF。
+> 內容有更新一律改 `docs/*.md`，再跑 `python tools/build_docs.py` 重新產生 PDF。
 > 不要直接改 PDF。
 
 ---
@@ -207,7 +207,7 @@ codex       # Codex
 
 ```bash
 pip install markdown          # 只需第一次
-python tools/build_pdf.py
+python tools/build_docs.py
 ```
 
 會重新產生 `pdf/` 底下三份：一頁快查、Word 舊稿必讀、遷移手冊。

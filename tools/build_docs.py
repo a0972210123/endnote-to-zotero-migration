@@ -1,19 +1,25 @@
-"""Render docs/*.md to print-ready PDFs.
+"""Build the distributable docs: extract the quick-reference sheet, render PDFs.
 
-Markdown is the source of truth -- edit the .md files, then re-run this to
-regenerate the PDFs. Never edit the PDFs directly.
+`docs/02_遷移手冊.md` is the source of truth for the quick reference -- it lives
+as a section inside the manual so there is only ever one copy to maintain.
+This script extracts it into a standalone file so that docs/ and pdf/ mirror
+each other (a `pdf/00_*.pdf` with no `docs/00_*.md` reads like something is
+missing).
 
-Outputs (into pdf/):
-  00_一頁快查.pdf        the quick-reference sheet, extracted so it prints alone
-  01_Word舊稿必讀.pdf
-  02_遷移手冊.pdf
+Edit the .md sources, then re-run this. Never edit the generated files.
+
+Generated (do not edit by hand):
+  docs/00_一頁快查.md    extracted from 02_遷移手冊.md
+  pdf/00_一頁快查.pdf    the quick-reference sheet, prints on one sheet
+  pdf/01_Word舊稿必讀.pdf
+  pdf/02_遷移手冊.pdf
 
 Requires:
   pip install markdown
   Google Chrome or Microsoft Edge (used headless to print; picks up the
   system CJK fonts, which is why we do not use wkhtmltopdf/weasyprint)
 
-Usage:  python tools/build_pdf.py
+Usage:  python tools/build_docs.py
 """
 import re
 import shutil
@@ -160,6 +166,24 @@ def print_pdf(browser: str, html_path: Path, pdf_path: Path) -> None:
     )
 
 
+QUICKREF_HEADER = """---
+title: EndNote → Zotero 遷移　一頁快查
+generated_from: 02_遷移手冊.md
+---
+
+<!-- 這個檔案是自動產生的，請不要直接編輯。 -->
+<!-- 內容來源是 02_遷移手冊.md 的「一頁快查」一節；改完那裡再跑 tools/build_docs.py。 -->
+
+# EndNote → Zotero 遷移　一頁快查
+
+> 📌 這頁是[遷移手冊](02_遷移手冊.md)的濃縮版，**印出來貼在螢幕旁邊照著勾**
+> （[PDF 版](../pdf/00_一頁快查.pdf)剛好一頁）。每一步的詳細說明都在手冊裡。
+>
+> ⚠️ **本檔由 `tools/build_docs.py` 自動產生，改這裡不會生效**——請改手冊。
+
+"""
+
+
 def main() -> None:
     OUT.mkdir(exist_ok=True)
     tmp = OUT / "_tmp"
@@ -168,10 +192,20 @@ def main() -> None:
     print(f"browser: {browser}\n")
 
     manual = (DOCS / "02_遷移手冊.md").read_text(encoding="utf-8")
+
+    # 抽出一頁快查，同時產出 md（給 GitHub 上直接閱讀）與 PDF（給列印）
+    quickref_body = strip_frontmatter(extract_quickref(manual)).replace("# 📄 一頁快查\n", "")
+    # 這行在手冊裡是導言；抽成獨立檔後「後面章節」已不存在，且與抬頭重複
+    quickref_body = quickref_body.replace(
+        "> 這一頁可單獨列印，貼在螢幕旁邊照著勾。細節看後面章節。\n", ""
+    ).lstrip("\n")
+    quickref_md = QUICKREF_HEADER + quickref_body.lstrip("\n")
+    (DOCS / "00_一頁快查.md").write_text(quickref_md, encoding="utf-8", newline="\n")
+    print(f"  OK  docs/00_一頁快查.md        （自動產生，勿手改）")
+
     jobs = [
         ("00_一頁快查", "EndNote → Zotero 遷移　一頁快查",
-         "# EndNote → Zotero 遷移　一頁快查\n\n"
-         + strip_frontmatter(extract_quickref(manual)).replace("# 📄 一頁快查\n", "")),
+         "# EndNote → Zotero 遷移　一頁快查\n\n" + quickref_body),
         ("01_Word舊稿必讀", "Word 舊稿必讀",
          (DOCS / "01_Word舊稿必讀.md").read_text(encoding="utf-8")),
         ("02_遷移手冊", "EndNote → Zotero 遷移手冊", manual),
