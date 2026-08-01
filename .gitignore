@@ -1,0 +1,16 @@
+# 使用者自己的資料，絕不進版本庫
+*.json
+!package.json
+*.xml
+*.enl
+snapshot*
+plan*
+
+# Python
+__pycache__/
+*.py[cod]
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
