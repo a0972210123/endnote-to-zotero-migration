@@ -8,7 +8,12 @@ EndNote (X9.3+) stores its library in SQLite:
   - misc (code=17): group sets; XML blob with name + member group uuids
 
 Usage:  python export_endnote_groups.py <path-to-sdb.eni> <output.json>
+
+Runs on Python 3.8+ (the __future__ import keeps the 3.9 annotation syntax
+from being evaluated). macOS system python3 is new enough.
 """
+from __future__ import annotations
+
 import json
 import re
 import sqlite3

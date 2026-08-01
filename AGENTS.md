@@ -35,8 +35,8 @@
 
 | # | 檢查 | 不合格怎麼辦 |
 |---|---|---|
-| 1 | 作業系統 | **macOS → 路徑 A 未實測**，建議走路徑 B，並誠實說明 |
-| 2 | Python 3.10+ | 走純 GUI 的「路徑 B」，指向手冊第 5 章，**不要強推安裝** |
+| 1 | 作業系統 | **macOS 路徑 A 可行**，但指令改 `python3`／正斜線／免 PYTHONIOENCODING；尚未實測過，要誠實說明 |
+| 2 | Python 3.8+（Mac 用 `python3`） | 走純 GUI 的「路徑 B」，指向手冊第 5 章，**不要強推安裝** |
 | 3 | EndNote ≥ X9.3 | 更舊的 library 不是 SQLite，腳本讀不到 → 只能走路徑 B |
 | 4 | Zotero ≥ 7（有 `Tools → Developer → Run JavaScript`） | **請他先更新 Zotero**，路徑 A 第 7 步完全靠這個選單 |
 | 5 | Zotero 已安裝並登入 | 先去註冊 |

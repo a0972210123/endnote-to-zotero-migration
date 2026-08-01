@@ -47,7 +47,7 @@ Zotero 匯入 EndNote XML 時，**書目與 PDF 會過去，但分組（Groups�
 
 ## 環境需求
 
-- **Python 3.10 以上**（腳本用到 `dict | None` 型別語法）
+- **Python 3.8 以上**（macOS 內建的 `python3` 通常就夠；Mac 上指令是 `python3` 不是 `python`）
 - Zotero 7 以上（`Tools → Developer → Run JavaScript` 需存在）
 - EndNote X9.3 以上（更早的版本 library 不是 SQLite 格式，本工具讀不到）
 

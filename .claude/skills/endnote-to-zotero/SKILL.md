@@ -44,8 +44,8 @@ description: Migrate an EndNote library to Zotero with PDFs and group hierarchy 
 
 | # | 檢查 | 怎麼問／怎麼查 | 不合格怎麼辦 |
 |---|---|---|---|
-| 1 | **作業系統** | 直接問，或看環境 | **Mac → 停**，見下方「macOS」節 |
-| 2 | **Python 3.10+** | `python --version` | **明確說「你走純 GUI 的路徑 B」**，轉手冊第 5 章。**不強推安裝** |
+| 1 | **作業系統** | 直接問，或看環境 | **Mac → 可以走**，但指令不同，見下方「macOS」節 |
+| 2 | **Python 3.8+** | Windows `python --version`／Mac `python3 --version` | **明確說「你走純 GUI 的路徑 B」**，轉手冊第 5 章。**不強推安裝** |
 | 3 | **EndNote 版本 ≥ X9.3** | 請他開 EndNote 看 `Help → About`；或直接確認 `<library>.Data\sdb\sdb.eni` 這個檔案存在 | 更舊的版本 library 不是 SQLite，腳本讀不到 → **只能走路徑 B** |
 | 4 | **Zotero 版本 ≥ 7** | 請他確認選單有 `Tools → Developer → Run JavaScript` | **沒有這個選單 → 請他先更新 Zotero**。路徑 A 的第 7 步完全靠它，沒有就做不了分組重建 |
 | 5 | **Zotero 已安裝並登入** | 問 | 先去 zotero.org 註冊 |
@@ -59,19 +59,26 @@ SQLite 資料庫層強制唯讀（`mode=ro`），就算有 bug 也寫不進去�
 
 ### macOS 使用者
 
-**本 skill 的路徑 A 是為 Windows 寫的**，以下部分在 Mac 上不成立：
+**路徑 A 在 Mac 上可行**——EndNote library 格式跨平台相同（`.Data/sdb/sdb.eni` 一樣是 SQLite），
+Python 腳本只讀 SQLite 與 XML，沒有任何 Windows 專屬呼叫。**差異只在指令怎麼打。**
 
-- 步驟 1 的登錄檔查詢（`HKCU\...`）不存在
-- 路徑分隔符號、PowerShell 指令、`PYTHONIOENCODING` 設法都不同
+| 項目 | Windows | macOS |
+|---|---|---|
+| 命令列 | PowerShell | 終端機 Terminal.app |
+| Python 指令 | `python` | **`python3`** |
+| 中文編碼 | 需 `PYTHONIOENCODING=utf-8` | **不需要**（預設 UTF-8） |
+| 找現役 library | 登錄檔 `HKCU\...` | **`find ~ -name "sdb.eni" 2>/dev/null`** 或看 EndNote 標題列 |
+| 路徑分隔 | `\` | `/` |
+| 幫他取得路徑 | Shift+右鍵「複製路徑」 | **請他把檔案拖進終端機視窗**（自動輸出完整路徑） |
+| Zotero 資料目錄 | `C:\Users\<name>\Zotero` | `~/Zotero` |
+| `planPath` 寫法 | 反斜線加倍 `'D:\\x\\plan.json'` | **不用加倍** `'/Users/name/plan.json'` |
 
-**Mac 上還沒有人實測過。** 誠實告訴使用者這件事，並給他兩個選擇：
-
-1. **走路徑 B**（純 GUI，跨平台都一樣）——**這是安全的建議**
-2. 願意當白老鼠的話：`.Data` 資料夾結構在 Mac 上相同，
-   library 位置改用 Finder 或 `find ~ -name "sdb.eni"` 找，
-   Python 腳本本身沒有平台相依。**但請他先完整備份，且過程中隨時可能卡住。**
-
-**不要假裝支援。** 沒測過就說沒測過。
+> ⚠️ **誠實告知使用者**：完整流程只在 Windows 上跑過 2,257 筆的實庫，
+> **Mac 尚未有人從頭到尾實測**。原理上沒有障礙，但他可能是第一個。
+> **請他先完整備份**，並在卡住時回報——那是要修文件的地方。
+>
+> **不要假裝已經測過。** 也不要因此就把他推去路徑 B——
+> 條件符合的話路徑 A 仍然是比較好的選擇（兩層分組、不重複匯入）。
 
 ---
 
@@ -81,12 +88,21 @@ SQLite 資料庫層強制唯讀（`mode=ro`），就算有 bug 也寫不進去�
 
 **不要猜。** 依序嘗試：
 
+**Windows**
 1. 查登錄檔最近開啟紀錄：
    ```
    HKCU\Software\ISI ResearchSoft\EndNote\Recent Libraries
    ```
 2. 搜尋磁碟上的 `*.Data\sdb\sdb.eni`，列出**全部**候選並比對修改時間
-3. 請使用者開啟 EndNote 看視窗標題列，確認檔名
+
+**macOS**
+1. ```bash
+   find ~ -name "sdb.eni" 2>/dev/null
+   ```
+2. 比對各候選的修改時間（`ls -l`）
+
+**兩者共同**
+3. 請使用者開啟 EndNote 看視窗標題列，確認檔名——**這招最可靠且跨平台**
 
 **找到多份時：把清單（路徑＋修改時間＋大小）攤給使用者，請他確認哪一份是現役的。**
 
@@ -108,10 +124,11 @@ SQLite 資料庫層強制唯讀（`mode=ro`），就算有 bug 也寫不進去�
 ### 步驟 3：分組快照
 
 ```bash
-python scripts/export_endnote_groups.py "<sdb.eni 路徑>" snapshot.json
+python scripts/export_endnote_groups.py "<sdb.eni 路徑>" snapshot.json    # Windows
+python3 scripts/export_endnote_groups.py "<sdb.eni 路徑>" snapshot.json   # macOS
 ```
 
-Windows 中文亂碼 → 加 `PYTHONIOENCODING=utf-8`。
+Windows 中文亂碼 → 加 `PYTHONIOENCODING=utf-8`。**Mac 不需要。**
 
 **🚦 關卡**：印出的筆數／group 數**必須**與步驟 2 的數字相符。
 不符 → 抓錯 library，回步驟 1。**不要繼續。**
@@ -169,7 +186,7 @@ python scripts/build_collection_plan.py snapshot.json "<zotero.sqlite>" plan.jso
 1. 開 Zotero → `Tools → Developer → Run JavaScript`
 2. **勾「Run as async function」**（沒勾會報錯）
 3. 把 `scripts/rebuild_collections.js` 的 `planPath` 改成他的 plan.json 路徑
-   （Windows 反斜線要兩個）
+   （**Windows 反斜線要打兩個**；**Mac 用正斜線、不用加倍**）
 4. 貼上 → Run
 
 **可安全重跑**——中斷了直接再跑一次，已建的沿用、已指派的跳過。
@@ -203,7 +220,7 @@ python scripts/build_collection_plan.py snapshot.json "<zotero.sqlite>" plan.jso
 | 庫很大（>3000 筆 / >5GB） | 提醒分批匯入、時間會很久、排在不用電腦的時段 |
 | EndNote 版本太舊（< X9.3） | library 不是 SQLite 格式，腳本讀不到 → 只能走路徑 B |
 | Zotero 沒有 `Run JavaScript` 選單 | 版本太舊（需 7 以上）→ 請他先更新，否則路徑 A 第 7 步做不了 |
-| macOS | 路徑 A 未實測 → 建議路徑 B，見開場的「macOS 使用者」節 |
+| macOS | **路徑 A 可行**，指令改用 `python3`／正斜線／不需 PYTHONIOENCODING，見開場的「macOS 使用者」節 |
 | EndNote 雲端／線上版（EndNote Web） | 本流程針對桌面版的本機 library；請他先在桌面版開啟並同步下來 |
 
 ---

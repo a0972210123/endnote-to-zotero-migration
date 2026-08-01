@@ -11,7 +11,13 @@ under; defaults to ROOT_NAME below.
 
 Read-only: zotero.sqlite is opened with immutable=1. Close Zotero before
 running -- immutable assumes the file does not change while it is read.
+
+Runs on Python 3.8+ (the __future__ import keeps the 3.9/3.10 annotation
+syntax from being evaluated; 3.8 is the floor because of the walrus operator
+below). macOS system python3 is new enough.
 """
+from __future__ import annotations
+
 import json
 import re
 import sqlite3
