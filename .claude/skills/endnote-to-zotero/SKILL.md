@@ -39,10 +39,39 @@ description: Migrate an EndNote library to Zotero with PDFs and group hierarchy 
 
 ### 2. 確認前置
 
-- Python 3.10 以上（`python --version`）。**沒有 → 明確告訴他「你走純 GUI 的路徑 B」**，
-  引導他看手冊第 5 章路徑 B，本 skill 不強推安裝 Python。
-- Zotero 已安裝並登入
-- 已備份（或至少確認 EndNote 原庫不會被動到——這點要主動安撫）
+**這五項全部在開場就問完。** 目的是把「會讓流程中途死掉」的條件提前暴露——
+底下第 3、4 項若不合格，是走到步驟 3 和步驟 7 才會炸，那時已經匯入好幾千筆了。
+
+| # | 檢查 | 怎麼問／怎麼查 | 不合格怎麼辦 |
+|---|---|---|---|
+| 1 | **作業系統** | 直接問，或看環境 | **Mac → 停**，見下方「macOS」節 |
+| 2 | **Python 3.10+** | `python --version` | **明確說「你走純 GUI 的路徑 B」**，轉手冊第 5 章。**不強推安裝** |
+| 3 | **EndNote 版本 ≥ X9.3** | 請他開 EndNote 看 `Help → About`；或直接確認 `<library>.Data\sdb\sdb.eni` 這個檔案存在 | 更舊的版本 library 不是 SQLite，腳本讀不到 → **只能走路徑 B** |
+| 4 | **Zotero 版本 ≥ 7** | 請他確認選單有 `Tools → Developer → Run JavaScript` | **沒有這個選單 → 請他先更新 Zotero**。路徑 A 的第 7 步完全靠它，沒有就做不了分組重建 |
+| 5 | **Zotero 已安裝並登入** | 問 | 先去 zotero.org 註冊 |
+
+> 🔴 **第 3、4 項務必在開場就確認，不要等腳本報錯才發現。**
+> 這兩項不合格時，使用者仍然可以完整走完路徑 B——**要主動這樣講**，
+> 不要讓他以為自己沒救了。
+
+**同時主動安撫**：整個流程不會修改他的 EndNote library，腳本對 EndNote 是
+SQLite 資料庫層強制唯讀（`mode=ro`），就算有 bug 也寫不進去。出錯就重來，原庫完好。
+
+### macOS 使用者
+
+**本 skill 的路徑 A 是為 Windows 寫的**，以下部分在 Mac 上不成立：
+
+- 步驟 1 的登錄檔查詢（`HKCU\...`）不存在
+- 路徑分隔符號、PowerShell 指令、`PYTHONIOENCODING` 設法都不同
+
+**Mac 上還沒有人實測過。** 誠實告訴使用者這件事，並給他兩個選擇：
+
+1. **走路徑 B**（純 GUI，跨平台都一樣）——**這是安全的建議**
+2. 願意當白老鼠的話：`.Data` 資料夾結構在 Mac 上相同，
+   library 位置改用 Finder 或 `find ~ -name "sdb.eni"` 找，
+   Python 腳本本身沒有平台相依。**但請他先完整備份，且過程中隨時可能卡住。**
+
+**不要假裝支援。** 沒測過就說沒測過。
 
 ---
 
@@ -173,6 +202,9 @@ python scripts/build_collection_plan.py snapshot.json "<zotero.sqlite>" plan.jso
 | EndNote 不在 D 槽 | 全部路徑用偵測結果，不假設槽別 |
 | 庫很大（>3000 筆 / >5GB） | 提醒分批匯入、時間會很久、排在不用電腦的時段 |
 | EndNote 版本太舊（< X9.3） | library 不是 SQLite 格式，腳本讀不到 → 只能走路徑 B |
+| Zotero 沒有 `Run JavaScript` 選單 | 版本太舊（需 7 以上）→ 請他先更新，否則路徑 A 第 7 步做不了 |
+| macOS | 路徑 A 未實測 → 建議路徑 B，見開場的「macOS 使用者」節 |
+| EndNote 雲端／線上版（EndNote Web） | 本流程針對桌面版的本機 library；請他先在桌面版開啟並同步下來 |
 
 ---
 
