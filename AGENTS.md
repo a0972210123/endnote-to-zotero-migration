@@ -40,6 +40,8 @@
 | 3 | EndNote ≥ X9.3 | 更舊的 library 不是 SQLite，腳本讀不到 → 只能走路徑 B |
 | 4 | Zotero ≥ 7（有 `Tools → Developer → Run JavaScript`） | **請他先更新 Zotero**，路徑 A 第 7 步完全靠這個選單 |
 | 5 | Zotero 已安裝並登入 | 先去註冊 |
+| 6 | 🔴 **library 在雲端同步資料夾內？**（路徑含 OneDrive／Dropbox／Google Drive／iCloud） | **停** — Clarivate 官方明言不相容、會損毀。引導他複製整組到非同步位置再操作。**要實際看路徑，多數人不知道自己中招** |
+| 7 | Zotero 是空的還是已有內容 | 非空 → 後續核對筆數一律用**差值**（原有 + EndNote），否則會誤判匯入失敗 |
 
 **第 3、4 項不合格時，使用者仍可完整走完路徑 B——要主動這樣講**，
 不要讓他以為自己沒救了。

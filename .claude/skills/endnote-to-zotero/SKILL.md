@@ -49,10 +49,37 @@ description: Migrate an EndNote library to Zotero with PDFs and group hierarchy 
 | 3 | **EndNote 版本 ≥ X9.3** | 請他開 EndNote 看 `Help → About`；或直接確認 `<library>.Data\sdb\sdb.eni` 這個檔案存在 | 更舊的版本 library 不是 SQLite，腳本讀不到 → **只能走路徑 B** |
 | 4 | **Zotero 版本 ≥ 7** | 請他確認選單有 `Tools → Developer → Run JavaScript` | **沒有這個選單 → 請他先更新 Zotero**。路徑 A 的第 7 步完全靠它，沒有就做不了分組重建 |
 | 5 | **Zotero 已安裝並登入** | 問 | 先去 zotero.org 註冊 |
+| 6 | 🔴 **library 是否在雲端同步資料夾內** | 找到路徑後檢查有無 `OneDrive`／`Dropbox`／`Google Drive`／`SharePoint`／`iCloud` | **停下來先處理**，見下方「雲端同步」節 |
+| 7 | **Zotero 是空的還是已有內容** | 請他看 My Library 目前幾筆 | 非空 → 後續核對筆數要用**差值**，見下方 |
 
 > 🔴 **第 3、4 項務必在開場就確認，不要等腳本報錯才發現。**
 > 這兩項不合格時，使用者仍然可以完整走完路徑 B——**要主動這樣講**，
 > 不要讓他以為自己沒救了。
+
+### 🔴 雲端同步資料夾（第 6 項）
+
+**Clarivate 官方明確表示 EndNote 不相容於雲端同步服務**，直接從同步資料夾開啟
+library 可能造成**損毀**（EndNote 存檔要依序寫多個檔案，任一個正在同步就會寫失敗）。
+
+⚠️ **很多人不知道自己中招**：不少機構的 OneDrive 會自動接管「文件」資料夾，
+而 EndNote 預設就存在那裡。**一定要實際看路徑，不要問「你有放雲端嗎」**——他多半不知道。
+
+**發現在同步資料夾內時，引導他二選一：**
+
+1. **複製整組（`.enl` ＋ `.Data`）到非同步位置再操作**（推薦；原本那份等於自動備份）
+2. 暫停同步，做完再恢復
+
+**選 1 之後，全程改用複本的路徑。** 要主動提醒這件事，不要一半用複本一半用原檔。
+
+### Zotero 已有既存內容（第 7 項）
+
+**非空庫的兩個影響，要主動說明：**
+
+1. **核對筆數要用差值**：匯入後總數 = 他原有筆數 + EndNote 筆數。
+   **後面每一個 🚦 關卡的筆數核對都要記得加上他原有的數字**，否則會誤判成匯入失敗。
+2. **分組重建可能連他原有的文獻一起指派**：`build_collection_plan.py` 用標題比對，
+   同一篇論文若原本 Zotero 就有，兩筆都會被放進對應分組。
+   **這是預期行為不是錯誤**，第 8 章合併重複時會處理掉。事先講，不要讓他嚇到。
 
 **同時主動安撫**：整個流程不會修改他的 EndNote library，腳本對 EndNote 是
 SQLite 資料庫層強制唯讀（`mode=ro`），就算有 bug 也寫不進去。出錯就重來，原庫完好。
@@ -156,6 +183,11 @@ python scripts/verify_export_xml.py "<export.xml>" snapshot.json "<.Data 路徑>
 - **`missing` = 0**
 
 `missing` 不是 0 → XML 存錯位置。請他移進 `.Data` 重新匯出。**不要繼續。**
+
+> **看到 `attachment links: 0 total`**：代表他的 EndNote 沒有 PDF 附件——**不是錯誤**。
+> 只用 EndNote 管書目的人很常見。主動說明並讓他往下走，不要讓他以為失敗了。
+> 但如果他說「我明明有附件」，那就是匯出沒帶到，或那些是 EndNote 的
+> **linked file（檔案連結）而非內嵌 PDF**——後者不會跟著 XML 走，要另外手動處理。
 
 ### 步驟 6：使用者手動匯入 Zotero
 
