@@ -1,4 +1,8 @@
+![EndNote 到 Zotero——多年的文獻，不必重建。書目與 PDF 附件一起轉移；兩層分組階層原樣重建；匯出結果逐項驗證，缺漏會報出來。開源、MIT 授權。](docs/img/hero.png)
+
 # EndNote → Zotero 遷移
+
+**繁體中文** · [English](README.en.md)
 
 把 EndNote 的**文獻、PDF 附件與分組階層**完整搬到 Zotero：**手冊 ＋ 腳本 ＋ AI skill**。
 
