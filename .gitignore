@@ -17,3 +17,6 @@ desktop.ini
 
 # PDF 產生過程的暫存 HTML
 pdf/_tmp/
+
+# 產生的行銷素材（歸檔在 Skill-Publishing-Assets）
+dist/
