@@ -143,7 +143,7 @@ repo 內建 agent 指示，**AI 會照本手冊的九步驟帶你走**，每一�
 **1. 把 repo 下載到本機**
 
 ```bash
-git clone https://github.com/a0972210123/endnote-to-zotero-migration.git
+git clone https://github.com/matt-ye/endnote-to-zotero-migration.git
 cd endnote-to-zotero-migration
 ```
 

@@ -119,7 +119,7 @@ The repo ships agent instructions. The agent follows the same nine steps and **s
 **1. Get the repo onto your machine**
 
 ```bash
-git clone https://github.com/a0972210123/endnote-to-zotero-migration.git
+git clone https://github.com/matt-ye/endnote-to-zotero-migration.git
 cd endnote-to-zotero-migration
 ```
 

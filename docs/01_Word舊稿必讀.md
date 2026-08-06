@@ -91,7 +91,7 @@ updated: 2026-08-01
 **研究室成員**：直接找我。
 
 **其他人**：到 GitHub 開一個 Issue —
-https://github.com/a0972210123/endnote-to-zotero-migration/issues
+https://github.com/matt-ye/endnote-to-zotero-migration/issues
 
 遇到手冊沒寫到、或步驟跟你看到的畫面對不上的地方，**請回報**——
 那是手冊要修的地方，不是你的問題。
